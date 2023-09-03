@@ -100,10 +100,10 @@ export default function HotelsAdmin({back,action}) {
                 <thead>
                     <tr className='bg-slate-900 text-white'>
                         <th className='p-2 pl-0 pr-0'>N°</th>
-                        <th className='text-left'>Pays</th>
-                        <th className='text-left'>Région</th>
-                        <th className='text-left'>Ville</th>
-                        <th className='text-left'>Quartier</th>
+                        <th className='text-left' width="30%">Nom</th>
+                        <th className='text-left' >Addresse</th>
+                        <th className='text-left'>Gérant</th>
+                        <th className='text-left' width="8%">Note</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
