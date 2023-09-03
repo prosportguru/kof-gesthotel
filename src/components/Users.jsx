@@ -32,6 +32,8 @@ export default function Users({back,action}) {
     const [data_show,set_data_show]=useState(null)
     const [search,set_search]=useState("")
     const [open,set_open]=useState(false);
+    const [open_update,set_open_update]=useState(false)
+    const [selected,set_selected]=useState(null)
     
     useEffect(()=>{
         load_data();   
@@ -73,6 +75,9 @@ export default function Users({back,action}) {
         set_deleting(false)
     }
     
+    const update=(item)=>{
+
+    }
   return (
     <div className='m-auto mt-[16px] h-[calc(100vh-16px-100px)]  flex flex-col items-center bg-white w-[80%] rounded-md p-2 text-xs'>
         <TopActions
@@ -99,7 +104,10 @@ export default function Users({back,action}) {
                 <tbody className=''>
                     {data_show?.map((item,index)=>{
                         return(
-                            <User item={item} index={index} key={index}  del={del}/>
+                            <User item={item} index={index} key={index}  del={del} set_open_update={()=>{
+                                set_selected(item)
+                                set_open_update(true)
+                            }}/>
                         )
                     })}
                 </tbody>
@@ -112,6 +120,15 @@ export default function Users({back,action}) {
             content={<AddUser 
             close={()=>set_open(false)}
             load_data={load_data}
+            />}
+        />}
+
+        {open_update==true && <Modal 
+            close={()=>{set_open_update(false);set_selected(null)}}
+            content={<AddUser 
+            close={()=>{set_open_update(false);set_selected(null)}}
+            load_data={load_data}
+            selected={selected}
             />}
         />}
     </div>

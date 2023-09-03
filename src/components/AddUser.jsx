@@ -1,13 +1,21 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ActivityIndicator from './ActivityIndicator'
 import { db } from '../firebase_file'
 
-export default function AddUser({close,load_data}) {
+export default function AddUser({close,load_data,selected}) {
     const [type,set_type]=useState("")
     const [nom,set_nom]=useState("")
     const [email,set_email]=useState("")
     const [password,set_password]=useState("")
     const [sending,set_sending]=useState(false)
+
+    useEffect(()=>{
+        if(selected==null) return;
+        set_type(selected?.type)
+        set_nom(selected?.username)
+        set_email(selected?.email)
+        set_password(selected?.password);
+    },[selected])
 
     const valider=async ()=>{
        if(type==""){
@@ -31,21 +39,30 @@ export default function AddUser({close,load_data}) {
         return;
        }
        set_sending(true)
-       const snap=await db.collection("users").where("email","==",email).get()
-       if(snap.docs.length>0){
-        alert("Cette addresse mail est déjà utilisée");
-        set_sending(false)
-        return;
-       }
-       await db.collection("users").add({
+
+       const line={
         type,
         username:nom,
         password,
         email,
-       })
+       }
+       if(selected==null){
+            const snap=await db.collection("users").where("email","==",email).get()
+            if(snap.docs.length>0){
+            alert("Cette addresse mail est déjà utilisée");
+            set_sending(false)
+            return;
+            }
+            await db.collection("users").add(line)
+       }else{
+        await db.collection("users").doc(selected?.key).update(line,{merge:true})
+       }
+
+       
        await load_data()
        close()
     }
+
 
   return (
     <div className='w-[300px] text-xs'>
@@ -56,7 +73,7 @@ export default function AddUser({close,load_data}) {
              <div className='flex flex-col mb-2'>
                 <strong>Type </strong>
                 <select className='p-2 rounded-md shadow-lg hover:shadow-none' 
-                defaultValue={type}
+                value={type}
                 onChange={e=>set_type(e.target.value)}
                 >
                     <option value=""></option>
