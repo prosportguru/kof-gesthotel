@@ -38,8 +38,10 @@ export default function ChambresAdmin({back,action}) {
     const [open,set_open]=useState(false);
     const [open_update,set_open_update]=useState(false)
     const [selected,set_selected]=useState(null)
+    const [hotels,set_hotels]=useState(null)
     
     useEffect(()=>{
+        load_hotels()
         load_data();   
     },[])
 
@@ -79,8 +81,16 @@ export default function ChambresAdmin({back,action}) {
         set_deleting(false)
     }
     
-    const update=(item)=>{
-
+    const load_hotels=async ()=>{
+        const snap=await db.collection("hotels").get();
+        let d=[];
+        snap.docs.map((doc)=>{
+            let id=doc.id;
+            let dt=doc.data()
+            dt.key=id;
+            d.push(dt)
+        })
+        set_hotels(d)
     }
   return (
     <div className='m-auto mt-[16px] h-[calc(100vh-16px-100px)]  flex flex-col items-center bg-white w-[80%] rounded-md p-2 text-xs'>
@@ -98,15 +108,21 @@ export default function ChambresAdmin({back,action}) {
                 <thead>
                     <tr className='bg-slate-900 text-white'>
                         <th className='p-2 pl-0 pr-0'>N°</th>
-                        <th className='text-left'>Icon</th>
+                        <th className='text-left'>Hôtel</th>
+                        <th className='text-left'>#m<sup>2</sup></th>
                         <th className='text-left'>Nom</th>
+                        <th className=''>Prix/Nuit(€)</th>
+                        <th className=''>#Personnes</th>
+                        
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody className=''>
                     {data_show?.map((item,index)=>{
                         return(
-                            <ChambreAdmin item={item} index={index} key={index}  del={del} set_open_update={()=>{
+                            <ChambreAdmin 
+                            hotels={hotels}
+                            item={item} index={index} key={index}  del={del} set_open_update={()=>{
                                 set_selected(item)
                                 set_open_update(true)
                             }}/>

@@ -141,6 +141,8 @@ export default function AddHotel({close,load_data,selected}) {
             }
         }
 
+        set_sending(true)
+
         let banners=selected?.banners ?? []
         if(zone.childNodes.length>0){
             const z_files=document.querySelectorAll(".file");
@@ -157,7 +159,7 @@ export default function AddHotel({close,load_data,selected}) {
         }
 
 
-        set_sending(true)
+        
         let map=selected?.map ?? ""
         if(files?.length>0){
             let file=files[0];
