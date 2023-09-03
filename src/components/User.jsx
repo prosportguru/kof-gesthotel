@@ -1,7 +1,9 @@
 import React from 'react'
 import Icon from './Icon';
+import ActivityIndicator from './ActivityIndicator';
 
-export default function User({index,item}) {
+export default function User({index,item,del}) {
+    const [deleting,set_deleting]=useState(false)
     let bg="";
     if(index%2==0){
         bg="bg-gray-100"
@@ -24,8 +26,11 @@ export default function User({index,item}) {
             <button className='border border-slate-900 p-1 flex items-center justify-center rounded-sm shadow-md hover:shadow-none'>
                 <Icon name="create-outline" />
             </button>
-            <button className='border border-slate-900 p-1 flex items-center justify-center rounded-sm shadow-md hover:shadow-none'>
-                <Icon name="close-outline" />
+            <button
+            disabled={deleting}
+            onClick={del.bind(this,item,set_deleting)}
+            className='border border-slate-900 p-1 flex items-center justify-center rounded-sm shadow-md hover:shadow-none'>
+                {deleting==true ? <ActivityIndicator />:<Icon name="close-outline" />}
             </button>
             </div>
         </td>
