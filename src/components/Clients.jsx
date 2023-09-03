@@ -70,7 +70,7 @@ export default function Clients({back,action}) {
     }
     
     const del=async (item,set_deleting)=>{
-        alert("deleting")
+        
         set_deleting(true)
         await db.collection("client").doc(item?.key).delete()
         await load_data()

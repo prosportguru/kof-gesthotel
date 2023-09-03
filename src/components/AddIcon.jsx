@@ -2,8 +2,9 @@ import React from 'react'
 import Icon from './Icon'
 
 export default function AddIcon({set_icon,close}) {
-    let icons=["person","person-outline","people","car","bed","checkmark","wifi","location","planet","globe","ellipse","ellipse-outline","square","square-outline",
-        "thunderstorm","thunderstorm-outline"]
+    let icons=["person","person-outline","people","people-outline","car","car-outline","bed","bed-outline","checkmark","wifi","wifi-outline"
+    ,"location","location-outline","planet","planet-outline","globe","globe-outline","ellipse","ellipse-outline","square","square-outline",
+        "thunderstorm","thunderstorm-outline","rose","rose-outline","paw","paw-outline"]
   return (
     <div className='z-10  grid grid-cols-6 gap-2 h-[100px] overflow-auto '>
         {icons?.map((item)=>{

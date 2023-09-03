@@ -70,9 +70,9 @@ export default function Equipements({back,action}) {
     }
     
     const del=async (item,set_deleting)=>{
-        alert("deleting")
+        
         set_deleting(true)
-        await db.collection("users").doc(item?.key).delete()
+        await db.collection("equipements").doc(item?.key).delete()
         await load_data()
         set_deleting(false)
     }
