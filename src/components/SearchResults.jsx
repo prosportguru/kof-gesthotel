@@ -1,23 +1,87 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Icon from './Icon'
 import ResultItem from './ResultItem'
 import { useNavigate } from 'react-router-dom'
+import { db } from '../firebase_file';
+import ActivityIndicator from './ActivityIndicator';
 
 export default function SearchResults() {
     const navigate=useNavigate();
-    const filtres=[
-        {id:1,title:"Piscine"},
-        {id:2,title:"Petit-dejeuner inclus"},
-        {id:3,title:"Hôtel"},
-        {id:4,title:"Vue sur la mer"},
-        {id:5,title:"Appartement"}
-    ]
+    const [equipements,set_equipements]=useState(null);
+    const [services,set_services]=useState(null)
+    const [quartiers,set_quartiers]=useState(null)
+    const [chambres,set_chambres]=useState(null)
+    const [hotels,set_hotels]=useState(null)
+
+
+    useEffect(()=>{
+        load_filtre()
+
+        load_data();
+    },[])
+
+    const load_filtre=async ()=>{
+        const snap=await db.collection("equipements").orderBy("nom","asc").get()
+        let d=[]
+        snap.docs.map((doc)=>{
+            let id=doc.id;
+            let dt=doc.data()
+            dt.key=id;
+            d.push(dt)
+        })
+        set_equipements(d)
+
+        const snap2=await db.collection("services").orderBy("nom","asc").get()
+        let d2=[]
+        snap2.docs.map((doc)=>{
+            let id=doc.id;
+            let dt=doc.data()
+            dt.key=id;
+            d2.push(dt)
+        })
+        set_services(d2)
+
+        const snap3=await db.collection("destinations").get()
+        let d3=[]
+        snap3.docs.map((doc)=>{
+            let id=doc.id;
+            let dt=doc.data()
+            dt.key=id;
+
+            d3.push({id,title:dt.quartier})
+        })
+        set_quartiers(d3)
+
+        const snap4=await db.collection("hotels").get()
+        let d4=[]
+        snap4.docs.map((doc)=>{
+            let id=doc.id;
+            let dt=doc.data()
+            dt.key=id;
+            d4.push(dt)
+        })
+        set_hotels(d4)
+
+        const snap5=await db.collection("chambres").get()
+        let d5=[]
+        snap5.docs.map((doc)=>{
+            let id=doc.id;
+            let dt=doc.data()
+            dt.key=id;
+            d5.push(dt)
+        })
+        set_chambres(d5)
+
+        
+    }
+    const load_data=async ()=>{}
+    
 
     const notes=[
         {id:1,title:"Tout afficher"},
-        {id:2,title:"Merveilleux 9+"},
-        {id:3,title:"Très bien 8+"},
-        {id:4,title:"Bien 7+"},
+        {id:9,title:"Merveilleux 9+"},
+        {id:8,title:"Très bien 8+"},
+        {id:7,title:"Bien 7+"},
     ]
 
     const etoiles=[
@@ -28,22 +92,7 @@ export default function SearchResults() {
         {id:5,title:"5"},
     ]
 
-    const type_hebergement=[
-        {id:1,title:"Villa"},
-        {id:2,title:"Location de vacances"},
-        {id:3,title:"Appart' hôtel"},
-        {id:4,title:"Maison d'hôtes"},
-        {id:5,title:"Hôtel"},
-        {id:6,title:"Appartement"},
-    ]
-
-    const quartiers=[
-        {id:1,title:"Lomé"},
-        {id:2,title:"Nyekonakpoé"},
-        {id:3,title:"Agbalé Pédo"},
-        {id:4,title:"Kodjovya"},
-        {id:5,title:"Sagbado"},
-    ]
+   
 
     const go_to_hotel_details=(hotel)=>{
         navigate("/details/1");
@@ -63,12 +112,22 @@ export default function SearchResults() {
         <div className='flex gap-4 m-2'>
             <div className='w-[250px] bg-white p-1'>
                 <h1 className='font-bold text-slate-900 text-lg mb-4'>Filtrer par</h1>
-                <h2 className='font-semibold text-md'>Filtres populaires</h2>
-                {filtres?.map((filtre,index)=>{
+                <h2 className='font-semibold text-md'>Equipements</h2>
+                {equipements?.map((filtre,index)=>{
                     return(
                         <button className='flex items-center gap-2 text-sm p-1 mb-1 hover:bg-gray-100' key={index}>
                          <Icon  name="square-outline" style={{fontSize:"18px"}}/>
-                        <p>{filtre?.title}</p>
+                        <p className='text-xs text-left'>{filtre?.nom}</p>
+                        </button>
+                    )
+                })}
+
+                <h2 className='font-semibold text-md'>Services</h2>
+                {services?.map((filtre,index)=>{
+                    return(
+                        <button className='flex items-center gap-2 text-sm p-1 mb-1 hover:bg-gray-100' key={index}>
+                         <Icon  name="square-outline" style={{fontSize:"18px"}}/>
+                        <p className='text-xs text-left'>{filtre?.nom}</p>
                         </button>
                     )
                 })}
@@ -88,7 +147,7 @@ export default function SearchResults() {
                     return(
                         <button className='flex items-center gap-2 text-sm p-1 mb-1 hover:bg-gray-100' key={index}>
                          <Icon  name="ellipse-outline" style={{fontSize:"18px"}}/>
-                        <p>{filtre?.title}</p>
+                        <p className='text-xs text-left'>{filtre?.title}</p>
                         </button>
                     )
                 })}
@@ -99,14 +158,14 @@ export default function SearchResults() {
                 {etoiles?.map((filtre,index)=>{
                     return(
                         <button className='flex items-center justify-center gap-2 text-sm p-1 mb-1 border shadow-lg text-xs hover:bg-gray-100' key={index}>
-                         <p>{filtre?.title}</p>
+                         <p className='text-left text-xs'>{filtre?.title}</p>
                          <Icon  name="star" style={{fontSize:"15px"}}/>
                         </button>
                     )
                 })}
                 </div>
 
-                <h2 className='font-semibold text-md mt-2'>Type d'hébergement</h2>
+                {/*<h2 className='font-semibold text-md mt-2'>Type d'hébergement</h2>
                 <div className='m-2'>
                 {type_hebergement?.map((filtre,index)=>{
                     return(
@@ -116,7 +175,7 @@ export default function SearchResults() {
                         </button>
                     )
                 })}
-                </div>
+                </div>*/}
 
                 <h2 className='font-semibold text-md mt-2'>Quartier</h2>
                 <div className='m-2'>
@@ -132,11 +191,16 @@ export default function SearchResults() {
                 
             </div>
             <div className='flex-1'>
-                <p className='text-sm '>43 hébergements</p>
-                <div>
-                    {new Array(4).fill(7).map((x,index)=>{
+                <p className='text-sm '>{chambres?.length ?? 0} hébergements</p>
+                {chambres==null && <ActivityIndicator />}
+                {chambres!=null && chambres?.length==0 && <p className='text-sm'>Aucun hébergement trouvé</p>}
+                <div className='mt-1'>
+                    {chambres?.map((x,index)=>{
+                        const hotel=hotels?.filter((a)=>{
+                            return a.key==x.hotel;
+                        })[0] ?? null;
                         return(
-                            <ResultItem item={x} key={index} index={index} go_to_hotel_details={go_to_hotel_details}/>
+                            <ResultItem notes={notes} item={x} key={index} index={index} go_to_hotel_details={go_to_hotel_details} hotel={hotel}/>
                         )
                     })}
                 </div>

@@ -12,6 +12,7 @@ export default function Search() {
   const {state}=useLocation()
   const {dst,arrive,depart,voyageur}=state;
 
+
   return (
     <div className='bg-slate-50 min-h-[100vh]'>
         <Nav />
