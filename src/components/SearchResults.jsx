@@ -12,6 +12,11 @@ export default function SearchResults({state}) {
     const [quartiers,set_quartiers]=useState(null)
     const [chambres,set_chambres]=useState(null)
     const [hotels,set_hotels]=useState(null)
+    const [selected_equipements,set_selected_equipements]=useState([])
+    const [selected_services,set_selected_services]=useState([])
+    const [prix,set_prix]=useState(10)
+    const [star,set_star]=useState(0)
+
 
     const {dst,arrive,depart,voyageur}=state;
     let {pays,region,ville,quartier}=dst;
@@ -25,9 +30,10 @@ export default function SearchResults({state}) {
         load_filtre()
 
         load_data();
-    },[state])
+    },[state,selected_equipements,selected_services,prix,star])
 
     const load_filtre=async ()=>{
+        set_chambres(null)
         const snap=await db.collection("equipements").orderBy("nom","asc").get()
         let d=[]
         snap.docs.map((doc)=>{
@@ -85,12 +91,72 @@ export default function SearchResults({state}) {
             let r=hotel?.region?.toLowerCase();
             let v=hotel?.ville?.toLowerCase();
             let q=hotel?.quartier?.toLowerCase();
+            let etoile=parseInt(hotel?.star)
 
             let show=pays.includes(p) && region?.includes(r) && ville?.includes(v)
             if(show==true){
-                d5.push(dt)
+                if(star!=0){
+                    if(star==etoile){
+                        d5.push(dt)
+                    }
+                }else{
+                    d5.push(dt)
+                }
+                
             }
+
+            
         })
+
+        if(selected_equipements?.length>0){
+            d5=d5.filter((x)=>{
+                let e=x.equipements ?? []
+                if(e?.length==0) return false;
+                let my_keys=e?.map((s)=>{
+                    return s.key;
+                }) ?? []
+                let _in=true;
+                selected_equipements?.map((a)=>{
+                    let key=a.key;
+                    if(my_keys?.indexOf(key)<0){
+                        _in=false;
+                    }
+                })
+
+                return _in;
+            })
+        }
+
+        if(selected_services?.length>0){
+            d5=d5.filter((x)=>{
+                let e=x.services ?? []
+                if(e?.length==0) return false;
+                let my_keys=e?.map((s)=>{
+                    return s.key;
+                }) ?? []
+                let _in=true;
+                selected_services?.map((a)=>{
+                    let key=a.key;
+                    if(my_keys?.indexOf(key)<0){
+                        _in=false;
+                    }
+                })
+
+                return _in;
+            })
+        }
+
+        d5=d5?.filter((x)=>{
+            let ppn=parseFloat(x.prix_par_nuit)
+            return ppn==prix;
+        })
+
+        if(star!=0){
+            d5=d5?.filter((x)=>{
+                let ppn=parseFloat(x.prix_par_nuit)
+                return ppn==prix;
+            })
+        }
         set_chambres(d5)
     }
     const load_data=async ()=>{}
@@ -116,6 +182,42 @@ export default function SearchResults({state}) {
     const go_to_hotel_details=(hotel)=>{
         navigate("/details/"+hotel?.key);
     }
+
+    const add_remove_equipements=(item)=>{
+        let nse=selected_equipements?.length==0 ? [] :[...selected_equipements]
+        const _in=(nse?.filter((x)=>{
+            return x.key==item?.key
+        }) ?? [])?.length==1
+        
+        if(_in){
+            nse=nse?.filter((x)=>{
+                return x.key!=item?.key
+            }) ?? []
+        }else{
+            nse.push(item)
+        }
+        set_selected_equipements(nse)
+        
+    }
+
+    const add_remove_services=(item)=>{
+        let nse=selected_services?.length==0 ? [] :[...selected_services]
+        const _in=(nse?.filter((x)=>{
+            return x.key==item?.key
+        }) ?? [])?.length==1
+        
+        if(_in){
+            nse=nse?.filter((x)=>{
+                return x.key!=item?.key
+            }) ?? []
+        }else{
+            nse.push(item)
+        }
+        set_selected_services(nse)
+        
+    }
+
+
   return (
     <div>
         <div className='bg-blue-900 p-4 m-2 rounded-lg '>
@@ -133,35 +235,49 @@ export default function SearchResults({state}) {
                 <h1 className='font-bold text-slate-900 text-lg mb-4'>Filtrer par</h1>
                 <h2 className='font-semibold text-md'>Equipements</h2>
                 {equipements?.map((filtre,index)=>{
+                    let _in=selected_equipements?.filter((x)=>{
+                        return x.key==filtre?.key;
+                    }) ?? []
                     return(
-                        <button className='flex items-center gap-2 text-sm p-1 mb-1 hover:bg-gray-100' key={index}>
-                         <Icon  name="square-outline" style={{fontSize:"18px"}}/>
+                        <button 
+                        onClick={add_remove_equipements.bind(this,filtre)}
+                        className='flex items-center gap-2 text-sm p-1 mb-1 hover:bg-gray-100' key={index}>
+                         {_in?.length>0 ? <Icon  name="square" style={{fontSize:"18px"}}/>:<Icon  name="square-outline" style={{fontSize:"18px"}}/>}
                         <p className='text-xs text-left'>{filtre?.nom}</p>
                         </button>
                     )
                 })}
 
-                <h2 className='font-semibold text-md'>Services</h2>
+                <h2 className='font-semibold text-md mt-4'>Services</h2>
                 {services?.map((filtre,index)=>{
+                    let _in=selected_services?.filter((x)=>{
+                        return x.key==filtre?.key;
+                    }) ?? []
                     return(
-                        <button className='flex items-center gap-2 text-sm p-1 mb-1 hover:bg-gray-100' key={index}>
-                         <Icon  name="square-outline" style={{fontSize:"18px"}}/>
+                        <button
+                        onClick={add_remove_services.bind(this,filtre)}
+                        className='flex items-center gap-2 text-sm p-1 mb-1 hover:bg-gray-100' key={index}>
+                          {_in?.length>0 ? <Icon  name="square" style={{fontSize:"18px"}}/>:<Icon  name="square-outline" style={{fontSize:"18px"}}/>}
                         <p className='text-xs text-left'>{filtre?.nom}</p>
                         </button>
                     )
                 })}
 
-                <h2 className='font-semibold text-md mt-2'>Prix total</h2>
+                <h2 className='font-semibold text-md mt-4'>Prix total</h2>
                 <div className='m-2'>
                 <div className='flex items-center justify-between'>
                     <p>0 €</p>
-                    <p>3000 € +</p>
+                    <p>{prix}</p>
+                    <p>100 € +</p>
                 </div>
-                <input type="range" min="1" max="100" className='w-[100%]' />
+                <input 
+                value={prix} 
+                onChange={e=>set_prix(e.target.value)}
+                type="range" min="1" max="100" className='w-[100%]' />
                 </div>
 
-                <h2 className='font-semibold text-md mt-2'>Note des clients</h2>
-                <div className='m-2'>
+                <h2 className='font-semibold text-md mt-4 hidden'>Note des clients</h2>
+                <div className='m-2 hidden'>
                 {notes?.map((filtre,index)=>{
                     return(
                         <button className='flex items-center gap-2 text-sm p-1 mb-1 hover:bg-gray-100' key={index}>
@@ -172,11 +288,18 @@ export default function SearchResults({state}) {
                 })}
                 </div>
 
-                <h2 className='font-semibold text-md mt-2'>Nombre d'étoiles</h2>
+                <h2 className='font-semibold text-md mt-4'>Nombre d'étoiles</h2>
                 <div className='m-2 grid grid-cols-4 gap-2'>
                 {etoiles?.map((filtre,index)=>{
+                    let bg=""
+                    if(filtre.id<=star){
+                        bg="bg-blue-500"
+                    }
                     return(
-                        <button className='flex items-center justify-center gap-2 text-sm p-1 mb-1 border shadow-lg text-xs hover:bg-gray-100' key={index}>
+                        <button 
+                        onClick={e=>set_star(filtre.id)}
+                        className={`${bg} flex items-center justify-center gap-2 text-sm p-1 mb-1 border shadow-lg text-xs hover:bg-gray-100`}
+                         key={index}>
                          <p className='text-left text-xs'>{filtre?.title}</p>
                          <Icon  name="star" style={{fontSize:"15px"}}/>
                         </button>
@@ -196,8 +319,8 @@ export default function SearchResults({state}) {
                 })}
                 </div>*/}
 
-                <h2 className='font-semibold text-md mt-2'>Quartier</h2>
-                <div className='m-2'>
+                <h2 className='font-semibold text-md mt-2 hidden'>Quartier</h2>
+                <div className='m-2 hidden'>
                 {quartiers?.map((filtre,index)=>{
                     return(
                         <button className='flex items-center gap-2 text-sm p-1 mb-1 hover:bg-gray-100' key={index}>

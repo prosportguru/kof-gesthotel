@@ -50,7 +50,9 @@ export default function AddChambre({close,load_data,selected}) {
         if(dt?.length>0){
             set_data_equipements(dt[0].equipements)
             set_data_services(dt[0].services)
+            
         }
+
         
 
     },[hotel,data_hotels])
