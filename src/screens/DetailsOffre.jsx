@@ -30,6 +30,11 @@ export default function DetailsOffre() {
     const load_hotel=async ()=>{
       if(id==undefined) return;
       const doc=await db.collection("hotels").doc(id).get()
+      if(doc.exists){
+        console.log("exist")
+      }else{
+        console.log("it does not exits",id)
+      }
       let dt=doc.data()
       dt.key=id;
       set_hotel(dt)

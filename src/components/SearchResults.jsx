@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import { db } from '../firebase_file';
 import ActivityIndicator from './ActivityIndicator';
 
-export default function SearchResults() {
+export default function SearchResults({state}) {
     const navigate=useNavigate();
     const [equipements,set_equipements]=useState(null);
     const [services,set_services]=useState(null)
@@ -13,12 +13,19 @@ export default function SearchResults() {
     const [chambres,set_chambres]=useState(null)
     const [hotels,set_hotels]=useState(null)
 
+    const {dst,arrive,depart,voyageur}=state;
+    let {pays,region,ville,quartier}=dst;
+    pays=pays?.toLowerCase()
+    region=region?.toLowerCase()
+    ville=ville?.toLowerCase()
+    quartier=quartier?.toLowerCase()
+
 
     useEffect(()=>{
         load_filtre()
 
         load_data();
-    },[])
+    },[state])
 
     const load_filtre=async ()=>{
         const snap=await db.collection("equipements").orderBy("nom","asc").get()
@@ -68,11 +75,23 @@ export default function SearchResults() {
             let id=doc.id;
             let dt=doc.data()
             dt.key=id;
-            d5.push(dt)
+            
+
+            const hotel=hotels?.filter((a)=>{
+                return a.key==dt.hotel;
+            })[0] ?? null;
+
+            let p=hotel?.pays?.toLowerCase() 
+            let r=hotel?.region?.toLowerCase();
+            let v=hotel?.ville?.toLowerCase();
+            let q=hotel?.quartier?.toLowerCase();
+
+            let show=pays.includes(p) && region?.includes(r) && ville?.includes(v)
+            if(show==true){
+                d5.push(dt)
+            }
         })
         set_chambres(d5)
-
-        
     }
     const load_data=async ()=>{}
     
@@ -95,7 +114,7 @@ export default function SearchResults() {
    
 
     const go_to_hotel_details=(hotel)=>{
-        navigate("/details/1");
+        navigate("/details/"+hotel?.key);
     }
   return (
     <div>
@@ -200,7 +219,7 @@ export default function SearchResults() {
                             return a.key==x.hotel;
                         })[0] ?? null;
                         return(
-                            <ResultItem notes={notes} item={x} key={index} index={index} go_to_hotel_details={go_to_hotel_details} hotel={hotel}/>
+                            <ResultItem state={state} notes={notes} item={x} key={index} index={index} go_to_hotel_details={go_to_hotel_details} hotel={hotel}/>
                         )
                     })}
                 </div>

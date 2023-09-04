@@ -63,7 +63,7 @@ export default function SearchBox({show_title,state}) {
                 <div className='flex flex-col'>
                     <h2 className='text-slate-900 font-semibold'>Destination</h2>
                     {dst==null && <p style={{color:"gray"}}>Définir une destination</p>}
-                    {dst!=null && <p style={{color:"gray"}}>{dst?.ville}, Région{dst?.region}, {dst?.pays}</p>}
+                    {dst!=null && <p style={{color:"gray"}}>{dst?.ville}, Région {dst?.region}, {dst?.pays}</p>}
                 </div>
             </div>
             

@@ -39,7 +39,7 @@ export default function ModalDestination({close,set_dst}) {
         
     }
   return (
-    <div className='w-[50vw] text-slate-900'>
+    <div className='w-[30vw] text-slate-900'>
         <div className='border flex items-center  gap-2 p-1'>
             <Icon name="search-outline" />
             <input 

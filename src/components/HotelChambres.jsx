@@ -34,7 +34,7 @@ export default function HotelChambres({hotel}) {
   return (
     <div className='p-2  border border-b-0 border-l-0 border-r-0 rounded-md '>
       <h1 className='text-2xl font-bold text-slate-900'>Choisissez votre chambre</h1>
-      <div className='flex gap-4 items-center mt-2 text-xs'>
+      <div className='flex gap-4 items-center mt-2 text-xs hidden'>
             <div 
             className='flex-1 border border-slate-600 flex items-center gap-2 rounded-md bg-white shadow-lg p-1 cursor-pointer hover:opacity-70'>
                 <div className='flex flex-col  w-[100%]'>

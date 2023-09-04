@@ -25,6 +25,9 @@ export default function AddHotel({close,load_data,selected}) {
     const [data_equipements,set_data_equipements]=useState(null)
     const [data_services,set_data_services]=useState(null);
     const [data_pays,set_data_pays]=useState(null)
+    const [data_region,set_data_region]=useState(null)
+    const [data_ville,set_data_ville]=useState(null)
+    const [data_quartier,set_data_quartier]=useState(null)
     const [delete_banner,set_delete_banner]=useState(false);
     const [banners,set_banners]=useState(null);
 
@@ -46,6 +49,11 @@ export default function AddHotel({close,load_data,selected}) {
         set_services(selected?.services)
         set_detail(selected.detail)
         set_banners(selected?.banners);
+        set_pays(selected?.pays ?? '')
+        set_region(selected?.region ?? '')
+        set_quartier(selected?.quartier ?? '')
+        set_ville(selected?.ville ?? '')
+
 
        
         
@@ -66,18 +74,41 @@ export default function AddHotel({close,load_data,selected}) {
     const load_pays=async ()=>{
         const snap=await db.collection("destinations").orderBy("pays","asc").get()
         let d=[]
+        let dr=[]
+        let dv=[]
+        let dq=[]
         snap.docs.map((doc)=>{
             let id=doc.id;
             let dt=doc.data()
             dt.key=id;
+            
             d.push(dt.pays)
+            dr.push(dt.region)
+            dv.push(dt.ville)
+            dq.push(dt.quartier)
         })
         if(d.length>0){
             d=new Set(d)
             d=[...d]
         }
+
+        if(dr.length>0){
+            dr=new Set(dr)
+            dr=[...dr]
+        }
+        if(dv.length>0){
+            dv=new Set(dv)
+            dv=[...dv]
+        }
+        if(dq.length>0){
+            dq=new Set(dq)
+            dq=[...dq]
+        }
         
         set_data_pays(d)
+        set_data_region(dr)
+        set_data_ville(dv)
+        set_data_quartier(dq)
     }
 
     const load_equipements=async()=>{
@@ -137,6 +168,23 @@ export default function AddHotel({close,load_data,selected}) {
         return;
        }
 
+       if(pays==""){
+        alert("Sélectionnez un pays");
+        return;
+       }
+
+       if(region==""){
+        alert("Sélectionnez une région");
+        return;
+       }
+       if(quartier==""){
+        alert("Sélectionnez un quartier");
+        return;
+       }
+       if(ville==""){
+        alert("Sélectionnez une ville");
+        return;
+       }
        
        const files=document.querySelector("#carte").files;
        if(selected==null){
@@ -191,7 +239,11 @@ export default function AddHotel({close,load_data,selected}) {
             equipements,
             services,
             detail,
-            banners
+            banners,
+            pays,
+            region,
+            ville,
+            quartier,
         }
 
         console.log(line);
@@ -321,6 +373,52 @@ export default function AddHotel({close,load_data,selected}) {
                 type="text" className='border outline-none bg-gray-100 p-2 rounded-md shadow-lg hover:shadow-none'>
                     <option value=""></option>
                     {data_pays?.map((x,index)=>{
+                        return(
+                            <option value={x} key={index}>{x}</option>
+                        )
+                    })}
+                </select>
+            </div>
+
+            <div className='flex flex-col mb-2'>
+                <strong>Région</strong>
+                <select 
+                value={region}
+                onChange={e=>set_region(e.target.value)}
+                type="text" className='border outline-none bg-gray-100 p-2 rounded-md shadow-lg hover:shadow-none'>
+                    <option value=""></option>
+                    {data_region?.map((x,index)=>{
+                        return(
+                            <option value={x} key={index}>{x}</option>
+                        )
+                    })}
+                </select>
+            </div>
+
+            <div className='flex flex-col mb-2'>
+                <strong>Ville</strong>
+                <select 
+                value={ville}
+                onChange={e=>set_ville(e.target.value)}
+                type="text" className='border outline-none bg-gray-100 p-2 rounded-md shadow-lg hover:shadow-none'>
+                    <option value=""></option>
+                    {data_ville?.map((x,index)=>{
+                        return(
+                            <option value={x} key={index}>{x}</option>
+                        )
+                    })}
+                </select>
+            </div>
+
+
+            <div className='flex flex-col mb-2'>
+                <strong>Quartier</strong>
+                <select 
+                value={quartier}
+                onChange={e=>set_quartier(e.target.value)}
+                type="text" className='border outline-none bg-gray-100 p-2 rounded-md shadow-lg hover:shadow-none'>
+                    <option value=""></option>
+                    {data_quartier?.map((x,index)=>{
                         return(
                             <option value={x} key={index}>{x}</option>
                         )

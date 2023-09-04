@@ -5,13 +5,24 @@ import img6 from "../images/img6.png"
 import img7 from "../images/img7.png"
 import Icon from './Icon'
 
-export default function ResultItem({item,index,go_to_hotel_details,hotel,notes}) {
+export default function ResultItem({item,index,go_to_hotel_details,hotel,notes,state}) {
     const [pos,set_pos]=useState(0);
+    const {dst,arrive,depart,voyageur}=state;
+    let {pays,region,ville,quartier}=dst;
+    pays=pays?.toLowerCase()
+    region=region?.toLowerCase()
+    ville=ville?.toLowerCase()
+    quartier=quartier?.toLowerCase()
+    
+    let p=hotel?.pays?.toLowerCase() 
+    let r=hotel?.region?.toLowerCase();
+    let v=hotel?.ville?.toLowerCase();
+    let q=hotel?.quartier?.toLowerCase();
+
+    let show=pays.includes(p) && region?.includes(r) && ville?.includes(v)
+   
 
     
-    useEffect(()=>{
-        console.log(pos)
-    },[pos])
     const images=item?.banners;
 
     let img=images[pos].url;
@@ -47,6 +58,8 @@ export default function ResultItem({item,index,go_to_hotel_details,hotel,notes})
 
         set_pos(p)
     }
+
+    if(show==false) return null;
   return (
     <div className='mb-4 flex gap-4 bg-white rounded-2xl shadow-lg cursor-pointer'>
         <div className='w-[300px] relative'>
@@ -70,6 +83,7 @@ export default function ResultItem({item,index,go_to_hotel_details,hotel,notes})
         <div className='flex-1 pb-2'  >
             <h1 className='text-slate-900 font-semibold text-xl'>{item?.nom}</h1>
             <h1 className='text-sm  opacity-70'>{hotel?.nom}</h1>
+            <h1 className='text-sm text-slate-900 opacity-70'>{hotel?.quartier}, {hotel?.ville}, {hotel?.region}, {hotel?.pays}</h1>
             <h1 className='text-sm text-slate-900 opacity-70'>{hotel?.addresse}</h1>
             <div className='text-slate-900'>
                 {new Array(nb).fill(nb).map((s,i)=>{
@@ -115,7 +129,7 @@ export default function ResultItem({item,index,go_to_hotel_details,hotel,notes})
 
             <div className='mt-4 flex items-center justify-end gap-4 mr-2 border  pt-1 border-b-0 border-l-0 border-r-0'>
                 <button className='text-[12px] text-blue-500 hover:underline cursor-pointer'
-                onClick={go_to_hotel_details.bind(this,item)}
+                onClick={go_to_hotel_details.bind(this,hotel)}
                 >Plus d'offres de cet hôtel</button>
                 <button className='bg-slate-900 p-2 text-white rounded-md border-none text-sm shadow-lg hover:shadow-none'>Réserver</button>
             </div>

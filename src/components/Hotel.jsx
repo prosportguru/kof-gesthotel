@@ -26,6 +26,8 @@ export default function Hotel({index,item,go_to_details_hotel}) {
     }else if(note<=10){
         str_note="Merveilleux"
     }
+    let nb=parseInt(item?.star);
+
   return (
     <div
     onClick={go_to_details_hotel.bind(this,item)}
@@ -34,6 +36,11 @@ export default function Hotel({index,item,go_to_details_hotel}) {
         <div className='m-2'>
             <h1 className='text-sm text-slate-900 font-semibold'>{item?.nom}</h1>
             <p className='text-xs text-slate-900 opacity-70'>{item?.addresse}</p>
+            <div className='flex items-center'>
+                {new Array(nb).fill(nb).map((x,i)=>{
+                    return <Icon name="star" key={i}/>
+                })}
+            </div>
         </div>
         <div className='m-2 mt-4'>
             <p className='flex items-center gap-2 text-sm'>
