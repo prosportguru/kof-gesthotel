@@ -12,46 +12,70 @@ export default function Chambre({item,index}) {
 
     let img=images[pos].url ?? null;
 
+    const prev_img=()=>{
+        let p=pos-1;
+        if(p<0){
+            p=images?.length-1
+        }
+        set_pos(p)
+    }
+    const next_img=()=>{
+        let p=pos+1;
+        if(p>=images?.length){
+            p=0;
+        }
+        set_pos(p)
+    }
+
+    let nb_personnes=item?.nb_personnes ;
+
   return (
     <div className='bg-white rounded-xl'>
         <div className='w-[100%] h-[180px] relative'>
             <img src={img} className='w-[100%] h-[180px] object-cover rounded-t-xl' />
             {images?.length>1 && <button 
+            onClick={prev_img}
             className='absolute bg-white w-[30px] h-[30px] rounded-full top-4 left-4 shadow-lg '>
                 <Icon name="arrow-back" />
             </button>}
 
             {images?.length>1 && <button 
+            onClick={next_img}
             className='absolute bg-white w-[30px] h-[30px] rounded-full top-4 right-4 shadow-lg '>
                 <Icon name="arrow-forward" />
             </button>}
         </div>
         
         <div className='flex flex-col gap-2 p-2'>
-            <h1 className='text-lg font-semibold mb-2'>Chambre supérieur, vue jardin</h1>
+            <h1 className='text-lg font-semibold mb-2'>{item?.nom}</h1>
             <div className='flex items-center gap-2 text-sm text-slate-900 opacity-70'>
                 <Icon name="people" style={{}} />
-                <p>2 personnes</p>
+                <p>{nb_personnes} personne{nb_personnes>1 ? 's':''}</p>
             </div>
             <div className='flex items-center gap-2 text-sm text-slate-900 opacity-70'>
                 <Icon name="bed" style={{}} />
-                <p>1 très grand lit</p>
+                <p>{item?.nb_grand_lits} très grand lit</p>
             </div>
             <div className='flex items-center gap-2 text-sm text-slate-900 opacity-70'>
-                <Icon name="wifi" style={{}} />
-                <p>Accès Wi-Fi gratuit</p>
+                <Icon name="bed" style={{}} />
+                <p>{item?.nb_petit_lits} petit lit</p>
             </div>
-            <div className='flex items-center gap-2 text-sm text-slate-900 opacity-70'>
-                <Icon name="car" style={{}} />
-                <p>Parking sans voiturier gratuit</p>
+            {item?.equipements?.map((x,i)=>{
+                return <div key={i}
+                className='flex items-center gap-2 text-sm text-slate-900 opacity-70'>
+                <Icon name={x.icon} style={{}} />
+                <p>{x?.nom}</p>
             </div>
-            <div className='flex items-center gap-2 text-sm text-slate-900 opacity-70'>
+            })}
+            
+           
+            {item?.prepaiement=="2" && <div className='flex items-center gap-2 text-sm text-slate-900 opacity-70'>
                 <Icon name="checkmark" style={{}} />
                 <p>Aucun prépaiement nécessaire</p>
-            </div>
+            </div>}
             <div className='flex items-center gap-2 text-sm text-slate-900 opacity-70'>
                 <Icon name="dice-outline" style={{}} />
-                <p>32 m<sup>2</sup></p>
+                <p>{item?.dimension} m<sup>2</sup></p>
             </div>
         </div>
 
@@ -77,10 +101,10 @@ export default function Chambre({item,index}) {
         </div>
 
         <div className='mt-4 p-2 relative'>
-            <h1 className='font-bold text-slate-900 text-lg'>1295 €</h1>
-            <p className='text-sm text-slate-900 opacity-70'>Pour 4 nuits</p>
-            <p className='text-sm text-slate-900 opacity-70'>324 € par nuit</p>
-            <p className='text-sm text-slate-900 opacity-70'>taxes et frais compris</p>
+            <h1 className='font-bold text-slate-900 text-lg'>{item?.prix_par_nuit} €</h1>
+            <p className='text-sm text-slate-900 opacity-70 hidden'>Pour 4 nuits</p>
+            <p className='text-sm text-slate-900 opacity-70'>par nuit</p>
+            <p className='text-sm text-slate-900 opacity-70 hidden'>taxes et frais compris</p>
             <button 
             className='absolute right-2 bottom-2 bg-blue-500 p-2 rounded-lg text-white font-bold shadow-lg hover:shadow-none'>Réserver</button>
         </div>

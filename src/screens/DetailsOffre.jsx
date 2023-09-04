@@ -45,8 +45,8 @@ export default function DetailsOffre() {
           {page==1 && <HotelPresentation hotel={hotel}/>}
           {page==2 && <HotelChambres hotel={hotel}/>}
           {page==3 && <HotelEmplacement />}
-          {page==4 && <HotelEquipements />}
-          {page==5 && <HotelServices />}
+          {page==4 && <HotelEquipements hotel={hotel}/>}
+          {page==5 && <HotelServices hotel={hotel}/>}
         </div>
         
        
