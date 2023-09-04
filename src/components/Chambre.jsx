@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import img4 from "../images/img4.png"
 import img5 from "../images/img5.png"
 import img6 from "../images/img6.png"
@@ -6,12 +6,27 @@ import img7 from "../images/img7.png"
 import Icon from './Icon'
 
 export default function Chambre({item,index}) {
-    const images=[img4,img5,img6,img7];
-    let img=images[index]
+    const [pos,set_pos]=useState(0);
+
+    const images=item?.banners ?? []
+
+    let img=images[pos].url ?? null;
 
   return (
     <div className='bg-white rounded-xl'>
-        <img src={img} className='w-[100%] h-[180px] object-cover rounded-t-xl' />
+        <div className='w-[100%] h-[180px] relative'>
+            <img src={img} className='w-[100%] h-[180px] object-cover rounded-t-xl' />
+            {images?.length>1 && <button 
+            className='absolute bg-white w-[30px] h-[30px] rounded-full top-4 left-4 shadow-lg '>
+                <Icon name="arrow-back" />
+            </button>}
+
+            {images?.length>1 && <button 
+            className='absolute bg-white w-[30px] h-[30px] rounded-full top-4 right-4 shadow-lg '>
+                <Icon name="arrow-forward" />
+            </button>}
+        </div>
+        
         <div className='flex flex-col gap-2 p-2'>
             <h1 className='text-lg font-semibold mb-2'>Chambre supérieur, vue jardin</h1>
             <div className='flex items-center gap-2 text-sm text-slate-900 opacity-70'>

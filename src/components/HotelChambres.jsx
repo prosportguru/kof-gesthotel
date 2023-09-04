@@ -1,15 +1,36 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Icon from './Icon'
 import Chambre from './Chambre'
 import Modal from './Modal'
 import ModalDestination from './ModalDestination'
 import ModalVoyageur from './ModalVoyageur'
+import ActivityIndicator from './ActivityIndicator'
+import { db } from '../firebase_file'
 
-export default function HotelChambres() {
+export default function HotelChambres({hotel}) {
   const [open_dst,set_open_dst]=useState(false)
   const [open_voyageur,set_open_voyageur]=useState(false)
   const [dst,set_dst]=useState(null);
   const [voyageur,set_voyageur]=useState(null)
+  const [chambres,set_chambres]=useState(null)
+
+  useEffect(()=>{
+    load_chambres()
+  },[])
+  const load_chambres=async ()=>{
+    if(hotel==null) return;
+    const snap=await db.collection("chambres").where("hotel","==",hotel?.key).get()
+    let d=[]
+    snap.docs.map((doc)=>{
+      let id=doc.id;
+      let dt=doc.data()
+      dt.key=id;
+      d.push(dt)
+    })
+    set_chambres(d)
+  }
+
+  if(hotel==null) return null;
   return (
     <div className='p-2  border border-b-0 border-l-0 border-r-0 rounded-md '>
       <h1 className='text-2xl font-bold text-slate-900'>Choisissez votre chambre</h1>
@@ -39,15 +60,17 @@ export default function HotelChambres() {
             </div>
            
         </div>
-        <div className='grid grid-cols-3 gap-4 mt-4'>
+        {chambres==null && <ActivityIndicator />}
+        {chambres != null && chambres?.length==0 && <p className="text-sm text-gray-500">Aucune chambre n'est trouvée</p>}
+        {chambres!=null && chambres?.length>0 && <div className='grid grid-cols-3 gap-4 mt-4'>
           {
-            new Array(4).fill(5).map((chambre,index)=>{
+            chambres.map((chambre,index)=>{
               return(
                   <Chambre key={index} item={chambre} index={index}/>
               )
             })
           }
-        </div>
+        </div>}
 
         {open_dst==true && <Modal 
         close={()=>set_open_dst(false)}

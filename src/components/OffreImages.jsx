@@ -5,17 +5,22 @@ import img6 from "../images/img6.png"
 import img7 from "../images/img7.png"
 import Icon from './Icon'
 
-export default function OffreImages() {
+export default function OffreImages({hotel}) {
+  if(hotel==null) return null;
+  const banners=hotel?.banners ?? []
+  if(banners?.length==0) return null;
+
   return (
     <div className='flex  gap-1 bg-white p-1'>
         <div className='flex-1'>
-            <img src={img7} className='w-[100%] h-[254px] object-cover'/>
+            <img src={banners[0].url ?? null} className='w-[100%] h-[254px] object-cover'/>
         </div>
         <div className='flex-1 grid grid-cols-2 gap-1'>
            {
-            [img4,img5,img6, img7].map((img,index)=>{
+            banners.map((img,index)=>{
+              if(index==0) return null
                 return(
-                    <img key={index} src={img} className='w-[100%] h-[125px] object-cover'/>
+                    <img key={index} src={img.url} className='w-[100%] h-[125px] object-cover'/>
                 )
             })
            }
