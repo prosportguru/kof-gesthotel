@@ -33,6 +33,7 @@ export default function AddChambre({close,load_data,selected}) {
     },[])
 
     useEffect(()=>{
+        console.log("the hotel is ",hotel)
         set_data_equipements([])
         set_data_services([])
         set_equipements([])
@@ -43,12 +44,16 @@ export default function AddChambre({close,load_data,selected}) {
         let dt=data_hotels?.filter((x)=>{
             return x.key==hotel;
         }) ?? []
+       
+        console.log("so the data is",dt)
+        
         if(dt?.length>0){
             set_data_equipements(dt[0].equipements)
             set_data_services(dt[0].services)
         }
+        
 
-    },[hotel])
+    },[hotel,data_hotels])
 
     const load_hotels=async ()=>{
         const email=auth?.currentUser?.email;

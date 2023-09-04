@@ -25,6 +25,8 @@ export default function AddHotel({close,load_data,selected}) {
     const [data_equipements,set_data_equipements]=useState(null)
     const [data_services,set_data_services]=useState(null);
     const [data_pays,set_data_pays]=useState(null)
+    const [delete_banner,set_delete_banner]=useState(false);
+    const [banners,set_banners]=useState(null);
 
     useEffect(()=>{
         load_users()
@@ -43,6 +45,7 @@ export default function AddHotel({close,load_data,selected}) {
         set_equipements(selected?.equipements)
         set_services(selected?.services)
         set_detail(selected.detail)
+        set_banners(selected?.banners);
 
        
         
@@ -121,6 +124,16 @@ export default function AddHotel({close,load_data,selected}) {
        }
        if(addresse==""){
         alert("L'addresse est vide");
+        return;
+       }
+
+       if(equipements?.length==0){
+        alert("Vous devez choisir certains équipements pour l'hôtel");
+        return;
+       }
+
+       if(services?.length==0){
+        alert("Vous devez choisir certains services pour l'hôtel");
         return;
        }
 
@@ -270,6 +283,21 @@ export default function AddHotel({close,load_data,selected}) {
     }
 
 
+    const remove_banner=async (banner,index)=>{
+        set_delete_banner(true)
+        let banners=selected?.banners;
+        let new_banners=banners?.filter((x,i)=>{
+            return i!=index;
+        }) ?? []
+
+        console.log("the new banners",new_banners)
+
+        await db.collection("hotels").doc(selected?.key).update({banners:new_banners},{merge:true})
+        set_banners(new_banners)
+        set_delete_banner(false)
+        await load_data()
+
+    }
   return (
     <div className='w-[600px] text-xs'>
         <div className='bg-slate-900 text-white  p-2'>
@@ -370,7 +398,7 @@ export default function AddHotel({close,load_data,selected}) {
 
         <div className='m-2 grid grid-cols-2 gap-2'>
             <div className='border border-l-0 border-t-0 border-b-0 pr-1 border-black'>
-                <strong>Equipements {equipements?.length}</strong>
+                <strong>Equipements+</strong>
                 <div className='grid grid-cols-2'>
                     {data_equipements?.map((item)=>{
                         let _in=(equipements?.filter((x)=>{return x.key==item.key}) ?? []).length>0
@@ -421,17 +449,28 @@ export default function AddHotel({close,load_data,selected}) {
                     <Icon name="add" style={{fontSize:"15px",color:"black"}} />
                 </button>
             </div>
+            <p className='text-[10px]'>Ajouter au moins 5 bannières de dimension mimimum 500x500</p>
             <div id='zone_input' className='grid grid-cols-2 gap-2'>
 
             </div>
             
             
         </div>
-        {selected!=null && selected?.banners?.length>0 && <div className='grid grid-cols-5 mt-2 gap-2 m-2'>
-                {selected?.banners?.map((x,index)=>{
-                    return <img src={x.url} className='w-[50px] h-[50px]' key={index}/>
+        {banners!=null && banners?.length>0 && <div className='grid grid-cols-5 mt-2 gap-2 m-2'>
+                {banners?.map((x,index)=>{
+                    return <div className='flex flex-col items-center border p-1 rounded-md shadow-lg hover:shadow-none'>
+                        <img src={x.url} className='w-[100%] h-[50px] object-cover' key={index}/>
+                        <button 
+                        onClick={remove_banner.bind(this,x,index)}
+                        className='bg-red-500 w-[20px] h-[20px] rounded-full flex items-center justify-center'>
+                            <Icon name="close-outline" style={{color:"white"}} />
+                        </button>
+                        </div>
                 })}
+
+                
             </div>}
+            {delete_banner==true && <ActivityIndicator />}
 
         <div className='flex flex-col mb-2 mt-4 items-center justify-center'>
                 <button 
