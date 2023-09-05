@@ -3,7 +3,7 @@ import ActivityIndicator from './ActivityIndicator';
 import firebase from "firebase"
 import { auth, db } from '../firebase_file';
 
-export default function Auth() {
+export default function Auth({close}) {
     const [form1,set_form1]=useState(true);
     const [nom,set_nom]=useState("")
     const [email,set_email]=useState("")
@@ -49,8 +49,9 @@ export default function Auth() {
            
             
         }
+        close()
 
-        window.location.href="";
+        //window.location.href="/";
 
     }
 

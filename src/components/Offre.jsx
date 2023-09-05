@@ -76,7 +76,7 @@ export default function Offre({item,index,go_to_offer_details,hotel,reserver}) {
                 <small className='line-through'>{prix} €</small>
             </h2>
             <p className='text-xs'>Par nuit</p>
-            <p className='text-xs text-green-500'>Disponible à partir de  20/09/2023</p>
+            <p className='text-xs text-green-500 hidden'>Disponible à partir de  20/09/2023</p>
         </div>
         <div className='flex items-center justify-between p-2'>
             <button className='bg-red-600 text-white font-bold text-xs p-2 mt-2 rounded-md shadow-lg'>-20 %</button>

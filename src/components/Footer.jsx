@@ -1,6 +1,44 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { db } from '../firebase_file'
+import { useNavigate } from 'react-router-dom';
 
 export default function Footer() {
+    const [destinations,set_destinations]=useState(null)
+    const [hotels,set_hotels]=useState(null);
+
+    const navigate=useNavigate()
+    useEffect(()=>{
+        load_destinations()
+        load_hotels()
+    },[])
+
+    const load_hotels=async ()=>{
+        let snap=await db.collection("hotels").orderBy("note","desc").limit(5).get();
+        let d=[]
+        snap.docs.map((doc)=>{
+            let id=doc.id;
+            let dt=doc.data()
+            dt.key=id;
+            d.push(dt)
+        })
+        set_hotels(d)
+    }
+
+    const load_destinations=async ()=>{
+        let snap=await db.collection("destinations").limit(5).get();
+        let d=[]
+        snap.docs.map((doc)=>{
+            let id=doc.id;
+            let dt=doc.data()
+            dt.key=id;
+            d.push(dt)
+        })
+        set_destinations(d)
+    }
+
+    const go_to_hotel=(hotel)=>{
+        navigate("/details/"+hotel.key)
+    }
   return (
     <div className='bg-white mt-8'>
         <h1 className='text-blue-500 font-bold m-2 text-xl'>KOF GESTHOTEL</h1>
@@ -8,19 +46,28 @@ export default function Footer() {
             <div className='flex-1'>
                 <h1 className='font-bold text-slate-900'>Destinations phares</h1>
                 <ol className='text-sm flex flex-col gap-3'>
-                    <li className='text-blue-500 hover:underline cursor-pointer hover:opacity-90'><a>Togo: Hotel 2 février</a></li>
-                    <li className='text-blue-500 hover:underline cursor-pointer hover:opacity-90'><a>Bénin: Hotel merveille</a></li>
-                    <li className='text-blue-500 hover:underline cursor-pointer hover:opacity-90'><a>RDC: Hotel notre bonheur</a></li>
-                    <li className='text-blue-500 hover:underline cursor-pointer hover:opacity-90'><a>Ghana: Tucks Hotel</a></li>
+                    {hotels?.map((x,i)=>{
+                        return(
+                            <li 
+                            onClick={go_to_hotel.bind(this,x)}
+                            key={x.key}
+                            className='text-blue-500 hover:underline cursor-pointer hover:opacity-90'><a>{x.pays}: {x?.nom}</a></li>
+                        )
+                    })}
+                    
                 </ol>
             </div>
             <div className='flex-1'>
                 <h1 className='font-bold text-slate-900'>Pays et régions principaux</h1>
                 <ol className='text-sm flex flex-col gap-3'>
-                    <li className='text-blue-500 hover:underline cursor-pointer hover:opacity-90'><a>Togo</a></li>
-                    <li className='text-blue-500 hover:underline cursor-pointer hover:opacity-90'><a>Bénin</a></li>
-                    <li className='text-blue-500 hover:underline cursor-pointer hover:opacity-90'><a>RDC</a></li>
-                    <li className='text-blue-500 hover:underline cursor-pointer hover:opacity-90'><a>Ghana</a></li>
+                    {destinations?.map((x,i)=>{
+                            return(
+                                <li
+                                key={i}
+                                className='text-blue-500 hover:underline cursor-pointer hover:opacity-90'><a>{x.pays}, Région {x.region}</a></li>
+                            )
+                        })}
+                   
                 </ol>
             </div>
             <div className='flex-1'>

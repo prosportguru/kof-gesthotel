@@ -159,7 +159,7 @@ export default function Reserver({close,hotel,chambre}) {
             value={arrivee}
             onChange={(e)=>set_arrivee(e.target.value)}
             type="date" className='bg-gray-200  p-2 rounded-md shadow-lg hover:shadow-none' />
-            <p className='text-[10px] text-green-500'>Disponible à partir de 20/10/2023</p>
+            <p className='text-[10px] text-green-500 hidden'>Disponible à partir de 20/10/2023</p>
         </div>
         </div>
 

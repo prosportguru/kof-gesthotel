@@ -37,7 +37,7 @@ export default function Nav() {
 
     const sign_out=async ()=>{
         await auth?.signOut();
-        window.location.href=""
+        navigate("/")
     }
     const navigate=useNavigate()
     const go_home=()=>{
