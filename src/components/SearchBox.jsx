@@ -5,7 +5,7 @@ import Modal from "./Modal";
 import ModalDestination from './ModalDestination';
 import ModalVoyageur from './ModalVoyageur';
 
-export default function SearchBox({show_title,state}) {
+export default function SearchBox({show_title,state,connected}) {
     const [open_dst,set_open_dst]=useState(false)
     const [open_voyageur,set_open_voyageur]=useState(false)
     const [dst,set_dst]=useState(null);
@@ -43,7 +43,7 @@ export default function SearchBox({show_title,state}) {
         }
 
         
-        navigate("/search",{state:{dst,depart,arrive,voyageur}});
+        navigate("/search",{state:{dst,depart,arrive,voyageur,connected}});
     }
 
     const date_depart_clicked=()=>{

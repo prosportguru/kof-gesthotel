@@ -6,8 +6,10 @@ import { db } from '../firebase_file';
 import ActivityIndicator from './ActivityIndicator';
 import Modal from './Modal';
 import Reserver from './Reserver';
+import Auth from './Auth';
 
-export default function SearchResults({state}) {
+export default function SearchResults({state,connected}) {
+    const [open2,set_open2]=useState(false)
     const navigate=useNavigate();
     const [equipements,set_equipements]=useState(null);
     const [services,set_services]=useState(null)
@@ -231,15 +233,17 @@ export default function SearchResults({state}) {
 
   return (
     <div>
-        <div className='bg-blue-900 p-4 m-2 rounded-lg '>
+        { connected!=true && <div className='bg-blue-900 p-4 m-2 rounded-lg '>
             <div className='text-white flex items-center gap-4'>
                 <div className='w-[50px] h-[50px] rounded-full bg-white flex items-center justify-center'>
                     <Icon name="notifications-outline" style={{color:"black",fontSize:"30px"}} />
                 </div>
                 <p className='flex-1 font-bold text-lg'>Connectez-vous et économisez en moyenne 15 % sur des milliers d'hôtels</p>
             </div>
-            <button className='m-4 mb-0 bg-blue-500 text-white p-4 rounded-full font-bold text-sm w-[150px] flex items-center justify-center hover:opacity-90 shadow-lg'>Se connecter</button>
-        </div>
+            <button 
+            onClick={e=>set_open2(true)}
+            className='m-4 mb-0 bg-blue-500 text-white p-4 rounded-full font-bold text-sm w-[150px] flex items-center justify-center hover:opacity-90 shadow-lg'>Se connecter</button>
+        </div>}
 
         <div className='flex gap-4 m-2'>
             <div className='w-[250px] bg-white p-1'>
@@ -354,6 +358,7 @@ export default function SearchResults({state}) {
                         })[0] ?? null;
                         return(
                             <ResultItem 
+                            connected={connected}
                             reserver={reserver}
                             state={state} notes={notes} item={x} key={index} index={index} go_to_hotel_details={go_to_hotel_details} hotel={hotel}/>
                         )
@@ -368,6 +373,13 @@ export default function SearchResults({state}) {
         close={()=>set_open(false)}
         hotel={hotel}
         chambre={chambre}
+        />}
+        />}
+
+        {open2==true && <Modal 
+        close={()=>set_open2(false)}
+        content={<Auth 
+        close={()=>set_open2(false)}
         />}
         />}
     </div>

@@ -5,7 +5,7 @@ import img6 from "../images/img6.png"
 import img7 from "../images/img7.png"
 import Icon from './Icon'
 
-export default function ResultItem({item,index,go_to_hotel_details,hotel,notes,state,reserver}) {
+export default function ResultItem({item,index,go_to_hotel_details,hotel,notes,state,reserver,connected}) {
     const [pos,set_pos]=useState(0);
     const {dst,arrive,depart,voyageur}=state;
     let {pays,region,ville,quartier}=dst;
@@ -58,6 +58,11 @@ export default function ResultItem({item,index,go_to_hotel_details,hotel,notes,s
 
         set_pos(p)
     }
+
+    let prix=parseFloat(item?.prix_par_nuit);
+    let remise=prix*0.2
+    remise=remise.toFixed(2)
+    let prix_membre=prix-remise
 
     if(show==false) return null;
   return (
@@ -122,7 +127,12 @@ export default function ResultItem({item,index,go_to_hotel_details,hotel,notes,s
                     </div>
                 </div>
                 <div className='flex flex-col mr-2 items-end'>
-                    <h1 className='font-bold text-slate-900 text-lg'>{item?.prix_par_nuit} €</h1>
+                    <div>
+                        {connected==true ? <div className='flex items-center gap-2'>
+                            <h1 className='font-bold text-slate-900 text-lg '>{prix_membre} €</h1>
+                            <h1 className='text-slate-900 text-sm line-through'>{item?.prix_par_nuit} €</h1>
+                        </div>:prix}
+                    </div>
                     <p className='text-sm text-gray-500'>par nuit</p>
                 </div>
             </div>

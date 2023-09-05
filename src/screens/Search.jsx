@@ -10,15 +10,15 @@ import { useLocation, useParams } from 'react-router-dom'
 
 export default function Search() {
   const {state}=useLocation()
-  const {dst,arrive,depart,voyageur}=state;
+  const {dst,arrive,depart,voyageur,connected}=state;
 
 
   return (
     <div className='bg-slate-50 min-h-[100vh]'>
         <Nav />
         <div className="w-[80%] m-auto mt-4 min-h-[300px]">
-            <SearchBox show_title={false} state={state}/>
-            <SearchResults  state={state}/>
+            <SearchBox show_title={false} state={state} connected={connected}/>
+            <SearchResults  state={state} connected={connected}/>
         </div>
         
        

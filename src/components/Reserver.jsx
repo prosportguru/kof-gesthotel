@@ -13,6 +13,17 @@ export default function Reserver({close,hotel,chambre}) {
     const [email,set_email]=useState("")
     const [sending,set_sending]=useState(false)
     const [done,set_done]=useState(false)
+    const [connected,set_connected]=useState(false)
+
+    useEffect(()=>{
+        auth.onAuthStateChanged((user)=>{
+            if(user==null){
+                set_connected(false)
+            }else{
+                set_connected(true)
+            }
+        })
+    },[])
 
     useEffect(()=>{
         const m_email=auth?.currentUser?.email;
@@ -36,10 +47,15 @@ export default function Reserver({close,hotel,chambre}) {
     useEffect(()=>{
         if(chambre==null) return;
         let prix=parseFloat(chambre?.prix_par_nuit);
+        if(connected==true){
+            let remise=prix*0.2
+            remise=remise.toFixed(2)
+            prix=prix-remise
+        }
         
         let t=prix*nb_nuit;
         set_total(t)
-    },[nb_nuit])
+    },[nb_nuit,connected])
 
 
     const remove_nb_nuit=()=>{
