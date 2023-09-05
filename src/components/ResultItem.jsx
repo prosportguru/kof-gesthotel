@@ -131,7 +131,7 @@ export default function ResultItem({item,index,go_to_hotel_details,hotel,notes,s
                         {connected==true ? <div className='flex items-center gap-2'>
                             <h1 className='font-bold text-slate-900 text-lg '>{prix_membre} €</h1>
                             <h1 className='text-slate-900 text-sm line-through'>{item?.prix_par_nuit} €</h1>
-                        </div>:prix}
+                        </div>:prix+" €"}
                     </div>
                     <p className='text-sm text-gray-500'>par nuit</p>
                 </div>

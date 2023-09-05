@@ -14,6 +14,7 @@ export default function Reserver({close,hotel,chambre}) {
     const [sending,set_sending]=useState(false)
     const [done,set_done]=useState(false)
     const [connected,set_connected]=useState(false)
+    const [moyen_payement,set_moyen_payement]=useState(0);
 
     useEffect(()=>{
         auth.onAuthStateChanged((user)=>{
@@ -87,6 +88,14 @@ export default function Reserver({close,hotel,chambre}) {
             alert("Vous devez renseigner votre addresse email");
             return;
         }
+
+        if(moyen_payement==0){
+            alert("Vous devez choisir un moyen de paiement");
+            return;
+        }
+
+
+
         set_sending(true)
         let line={
             ...chambre,
@@ -100,8 +109,35 @@ export default function Reserver({close,hotel,chambre}) {
             date:firebase.firestore.FieldValue.serverTimestamp(),
         }
         await db.collection("reservations").add(line);
+
+        let api_key="7614c0e3-1973-4e96-9e52-4d950e39d984"
+        let url=`https://paygateglobal.com/v1/page?token=${api_key}&amount=${total*655}&description=${hotel?.nom}&identifier=${Math.random()}&url=https://kof-gesthotel.web.app&phone=${telephone}&network=${moyen_payement==1 ? 'TOGOCEL':'MOOV'}`;
+
+        window.location.href=url;
+
+        /*let url="https://paygateglobal.com/api/v1/pay"
+       const res= await fetch(url,{
+            method:"POST",
+            mode:"no-cors",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+              },
+            body:JSON.stringify({
+                auth_token:"7614c0e3-1973-4e96-9e52-4d950e39d984",
+                phone_number:telephone,
+                amount:total*655,
+                description:chambre?.nom,
+                identifier:Math.random(),
+                network:moyen_payement==1 ? 'TMONEY':'FLOOZ'
+            })
+        })
+
+        const response=await res.text()
+        console.log("response",response)*/
+
         set_sending(false)
-        set_done(true)
+        //set_done(true)
     }
 
     if(done==true){
@@ -182,6 +218,25 @@ export default function Reserver({close,hotel,chambre}) {
                 placeholder='Votre email'
                 type="email" className='border p-2 rounded-md shadow-lg hover:shadow-none outline-none'/>
             </div>
+        </div>
+
+        <div className='m-2 mt-4'>
+            <strong className='text-sm'>Moyens de paiement</strong>
+            <div className='flex items-center gap-4'>
+                <button 
+                onClick={(e)=>set_moyen_payement(1)}
+                className='flex items-center gap-2 text-xs border p-2 rounded-md shadow-lg hover:shadow-none'>
+                    {moyen_payement==1 ? <Icon name="ellipse" />:<Icon name="ellipse-outline" />}
+                    <p>TMoney</p>
+                </button>
+
+                <button 
+                onClick={(e)=>set_moyen_payement(2)}
+                className='flex items-center gap-2 text-xs border p-2 rounded-md shadow-lg hover:shadow-none'>
+                    {moyen_payement==2 ? <Icon name="ellipse" />:<Icon name="ellipse-outline" />}
+                    <p>Flooz</p>
+                </button>
+            </div>  
         </div>
 
         <div className='text-sm flex items-center justify-end gap-2 m-2 mt-4'>

@@ -80,12 +80,16 @@ export default function Reservations({back,action}) {
                     <tr className='bg-slate-900 text-white'>
                         <th className='p-2 pl-0 pr-0'>N°</th>
                         <th className='text-left'>Date</th>
+                        <th className='text-left'>Arrivé</th>
+                        <th className='text-center'>#Nuit</th>
+                        <th className='text-center'>Total</th>
+                        <th className='text-center'>Membre</th>
                         <th className='text-left'>Hotel</th>
                         <th className='text-left'>Chambre</th>
                         <th className='text-left'>Client</th>
                         <th className='text-left'>Téléphone</th>
                         <th className='text-left'>Email</th>
-                        
+                        <th className=''>Actions</th>
                     </tr>
                 </thead>
                 <tbody className=''>

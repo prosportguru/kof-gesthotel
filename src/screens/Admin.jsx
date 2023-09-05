@@ -15,16 +15,7 @@ import Destinations from '../components/Destinations'
 import ChambresAdmin from '../components/ChambresAdmin'
 import Reservations from '../components/Reservations'
 
-const actions=[
-    {id:1,title:"Utilisateurs",icon:"people-outline",color:"rgba(255,0,0,0.3)"},
-    {id:2,title:"Clients",icon:"person-outline",color:"rgba(0,255,0.3)"},
-    {id:3,title:"Hôtels",icon:"home-outline",color:"rgba(0,0,255,0.3)"},
-    {id:4,title:"Equipements",icon:"briefcase-outline",color:"rgba(255,0,255,0.3)"},
-    {id:5,title:"Services",icon:"basket-outline",color:"rgba(100,100,0,0.3)"},
-    {id:6,title:"Destinations",icon:"location-outline",color:"rgba(100,0,100,0.3)"},
-    {id:7,title:"Chambres",icon:"bed-outline",color:"rgba(10,20,30,0.3)"},
-    {id:8,title:"Résevations",icon:"cart-outline",color:"rgba(100,200,300,0.3)"},
-]
+
 
 export default function Admin() {
     const navigate=useNavigate()
@@ -38,9 +29,35 @@ export default function Admin() {
     const [page,set_page]=useState(null)
     const [selected_action,set_selected_action]=useState(null)
 
+    const [actions,set_actions]=useState([
+        {id:1,title:"Utilisateurs",icon:"people-outline",color:"rgba(255,0,0,0.3)"},
+        {id:2,title:"Clients",icon:"person-outline",color:"rgba(0,255,0.3)"},
+        {id:3,title:"Hôtels",icon:"home-outline",color:"rgba(0,0,255,0.3)"},
+        {id:4,title:"Equipements",icon:"briefcase-outline",color:"rgba(255,0,255,0.3)"},
+        {id:5,title:"Services",icon:"basket-outline",color:"rgba(100,100,0,0.3)"},
+        {id:6,title:"Destinations",icon:"location-outline",color:"rgba(100,0,100,0.3)"},
+        {id:7,title:"Chambres",icon:"bed-outline",color:"rgba(10,20,30,0.3)"},
+        {id:8,title:"Résevations",icon:"cart-outline",color:"rgba(100,200,300,0.3)"},
+    ])
+
     useEffect(()=>{
         set_data(actions)
     },[])
+
+    useEffect(()=>{
+        if(me==null) return;
+        console.log(me,actions)
+        if(me?.type!=1){
+            let res=actions?.filter((x)=>{
+                return x.id!= 1;
+            }) ?? []
+
+            console.log("the result is",res)
+            set_data(res)
+        }
+    },[me])
+
+   
 
     useEffect(()=>{
         if(search==""){
