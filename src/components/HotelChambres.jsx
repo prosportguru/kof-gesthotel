@@ -6,6 +6,7 @@ import ModalDestination from './ModalDestination'
 import ModalVoyageur from './ModalVoyageur'
 import ActivityIndicator from './ActivityIndicator'
 import { db } from '../firebase_file'
+import Reserver from './Reserver'
 
 export default function HotelChambres({hotel}) {
   const [open_dst,set_open_dst]=useState(false)
@@ -13,6 +14,10 @@ export default function HotelChambres({hotel}) {
   const [dst,set_dst]=useState(null);
   const [voyageur,set_voyageur]=useState(null)
   const [chambres,set_chambres]=useState(null)
+  
+  const [chambre,set_chambre]=useState(null);
+  const [open,set_open]=useState(false)
+
 
   useEffect(()=>{
     load_chambres()
@@ -29,6 +34,11 @@ export default function HotelChambres({hotel}) {
     })
     set_chambres(d)
   }
+
+  const reserver=(hotel,chambre)=>{
+    set_chambre(chambre)
+    set_open(true)
+}
 
   if(hotel==null) return null;
   return (
@@ -66,7 +76,7 @@ export default function HotelChambres({hotel}) {
           {
             chambres.map((chambre,index)=>{
               return(
-                  <Chambre key={index} item={chambre} index={index}/>
+                  <Chambre key={index} item={chambre} index={index} reserver={reserver} hotel={hotel}/>
               )
             })
           }
@@ -85,6 +95,17 @@ export default function HotelChambres({hotel}) {
         close={()=>set_open_voyageur(false)}
         />}
         />}
+
+      {open==true && <Modal 
+        close={()=>set_open(false)}
+        content={<Reserver 
+        close={()=>set_open(false)}
+        hotel={hotel}
+        chambre={chambre}
+        />}
+        />}
+
+
     </div>
   )
 }

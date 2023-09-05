@@ -8,7 +8,7 @@ import Client from './Client';
 import Reservation from './Reservation';
 
 const TopComponent=({search,set_search})=>{
-    
+    return null;
     return(
         <div className='flex items-center gap-4'>
             <div className='bg-gray-100 w-[200px] p-1 rounded-md shadow-lg hover:shadow-none '>
@@ -49,7 +49,7 @@ export default function Reservations({back,action}) {
    
 
     const load_data=async ()=>{
-        const snap=await db.collection("clients").get();
+        const snap=await db.collection("reservations").orderBy("date","desc").get();
         let d=[];
         snap.docs.map((doc)=>{
             let id=doc.id;
@@ -79,11 +79,13 @@ export default function Reservations({back,action}) {
                 <thead>
                     <tr className='bg-slate-900 text-white'>
                         <th className='p-2 pl-0 pr-0'>N°</th>
-                        <th className='text-left'>Type</th>
-                        <th className='text-left'>Utilisateur</th>
+                        <th className='text-left'>Date</th>
+                        <th className='text-left'>Hotel</th>
+                        <th className='text-left'>Chambre</th>
+                        <th className='text-left'>Client</th>
+                        <th className='text-left'>Téléphone</th>
                         <th className='text-left'>Email</th>
-                        <th className='text-left'>Mot de passe</th>
-                        <th>Actions</th>
+                        
                     </tr>
                 </thead>
                 <tbody className=''>

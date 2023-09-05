@@ -5,7 +5,7 @@ import img6 from "../images/img6.png"
 import img7 from "../images/img7.png"
 import Icon from './Icon'
 
-export default function Offre({item,index,go_to_offer_details,hotel}) {
+export default function Offre({item,index,go_to_offer_details,hotel,reserver}) {
     const [pos,set_pos]=useState(0);
 
     const images=item?.banners ?? [];
@@ -60,8 +60,9 @@ export default function Offre({item,index,go_to_offer_details,hotel}) {
             </button>}
         </div>
         
-        <div className='p-2 h-[70px]'>
+        <div className='p-2 h-[100px]'>
             <h2 className='text-slate-900 text-sm font-bold'>{item?.nom}</h2>
+            <h2 className='text-xs mt-1'>{hotel?.nom}</h2>
             <div className='flex items-center gap-1'>
                 <Icon name="location-outline" />
                 <h3 className='text-xs'>{hotel?.quartier}, {hotel?.ville}, {hotel?.pays}</h3>
@@ -79,7 +80,9 @@ export default function Offre({item,index,go_to_offer_details,hotel}) {
         </div>
         <div className='flex items-center justify-between p-2'>
             <button className='bg-red-600 text-white font-bold text-xs p-2 mt-2 rounded-md shadow-lg'>-20 %</button>
-            <button className='text-blue-500  font-bold text-xs p-2 mt-2 rounded-md hover:underline'>Réserver</button>
+            <button className='text-blue-500  font-bold text-xs p-2 mt-2 rounded-md hover:underline'
+            onClick={reserver.bind(this,hotel,item)}
+            >Réserver</button>
         </div>
         
     </div>

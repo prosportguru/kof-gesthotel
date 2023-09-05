@@ -3,10 +3,16 @@ import Offre from './Offre'
 import { useNavigate } from 'react-router-dom'
 import ActivityIndicator from './ActivityIndicator'
 import { db } from '../firebase_file'
+import Modal from './Modal'
+import Reserver from './Reserver'
 
 export default function LastOffers() {
     const [data,set_data]=useState(null)
     const [hotels,set_hotels]=useState(null)
+    const [hotel,set_hotel]=useState(null)
+    const [chambre,set_chambre]=useState(null);
+    const [open,set_open]=useState(false)
+
     useEffect(()=>{
         load_data()
     },[])
@@ -36,6 +42,11 @@ export default function LastOffers() {
     const go_to_offer_details=(offer)=>{
         //navigate("/details/1");
     }
+    const reserver=(hotel,chambre)=>{
+        set_hotel(hotel)
+        set_chambre(chambre)
+        set_open(true)
+    }
   return (
     <div className='m-2 mt-4'>
         <h1 className='text-4xl font-bold text-slate-900'>-20% sur tous nos prix pour les nos clients inscrits
@@ -54,11 +65,21 @@ export default function LastOffers() {
                     return(
                         <Offre 
                         hotel={hotel}
+                        reserver={reserver}
                         key={index} item={item} index={index} go_to_offer_details={go_to_offer_details} />
                     )
                 })
             }
         </div>
+
+        {open==true && <Modal 
+        close={()=>set_open(false)}
+        content={<Reserver 
+        close={()=>set_open(false)}
+        hotel={hotel}
+        chambre={chambre}
+        />}
+        />}
         
     </div>
   )

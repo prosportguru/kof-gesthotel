@@ -5,7 +5,7 @@ import img6 from "../images/img6.png"
 import img7 from "../images/img7.png"
 import Icon from './Icon'
 
-export default function Chambre({item,index}) {
+export default function Chambre({item,index,hotel,reserver}) {
     const [pos,set_pos]=useState(0);
 
     const images=item?.banners ?? []
@@ -79,7 +79,7 @@ export default function Chambre({item,index}) {
             </div>
         </div>
 
-        <div className='mt-4 p-2 border  border-l-0 border-r-0'>
+        <div className='mt-4 p-2 border  border-l-0 border-r-0 hidden'>
             <h1 className='flex items-center justify-between mb-1'>
                 <strong className='text-slate-900'>Extras</strong>
                 <small className='tetx-slate-900 opacity-70'>par nuit</small>
@@ -106,7 +106,9 @@ export default function Chambre({item,index}) {
             <p className='text-sm text-slate-900 opacity-70'>par nuit</p>
             <p className='text-sm text-slate-900 opacity-70 hidden'>taxes et frais compris</p>
             <button 
-            className='absolute right-2 bottom-2 bg-blue-500 p-2 rounded-lg text-white font-bold shadow-lg hover:shadow-none'>Réserver</button>
+            className='absolute right-2 bottom-2 bg-blue-500 p-2 rounded-lg text-white font-bold shadow-lg hover:shadow-none'
+            onClick={reserver.bind(this,hotel,item)}
+            >Réserver</button>
         </div>
     </div>
   )

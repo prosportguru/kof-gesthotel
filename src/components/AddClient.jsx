@@ -7,6 +7,7 @@ export default function AddClient({close,load_data,selected}) {
     const [nom,set_nom]=useState("")
     const [email,set_email]=useState("")
     const [password,set_password]=useState("")
+    const [telephone,set_telephone]=useState("")
     const [sending,set_sending]=useState(false)
 
     useEffect(()=>{
@@ -15,6 +16,7 @@ export default function AddClient({close,load_data,selected}) {
         set_nom(selected?.username)
         set_email(selected?.email)
         set_password(selected?.password);
+        set_telephone(selected?.telephone ?? '')
     },[selected])
 
     const valider=async ()=>{
@@ -31,6 +33,10 @@ export default function AddClient({close,load_data,selected}) {
         alert("Le mot de passe est vide");
         return;
        }
+       if(telephone==""){
+        alert("Le téléphone est vide");
+        return;
+       }
        if(password?.length<6){
         alert("Le mot de passe est trop court (minimums 6 caractères) ");
         return;
@@ -42,6 +48,7 @@ export default function AddClient({close,load_data,selected}) {
         username:nom,
         password,
         email,
+        telephone,
        }
        if(selected==null){
             const snap=await db.collection("clients").where("email","==",email).get()
@@ -83,6 +90,13 @@ export default function AddClient({close,load_data,selected}) {
                 <input 
                 value={nom}
                 onChange={e=>set_nom(e.target.value)}
+                type="text" className='border outline-none bg-gray-100 p-2 rounded-md shadow-lg hover:shadow-none'/>
+            </div>
+            <div className='flex flex-col mb-2'>
+                <strong>Téléphone</strong>
+                <input 
+                value={telephone}
+                onChange={e=>set_telephone(e.target.value)}
                 type="text" className='border outline-none bg-gray-100 p-2 rounded-md shadow-lg hover:shadow-none'/>
             </div>
             <div className='flex flex-col mb-2'>

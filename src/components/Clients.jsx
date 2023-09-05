@@ -97,6 +97,7 @@ export default function Clients({back,action}) {
                     <tr className='bg-slate-900 text-white'>
                         <th className='p-2 pl-0 pr-0'>N°</th>
                         <th className='text-left'>Client</th>
+                        <th className='text-left'>Téléphone</th>
                         <th className='text-left'>Email</th>
                         <th className='text-left'>Mot de passe</th>
                         <th>Actions</th>

@@ -18,6 +18,7 @@ export default function Client({index,item,del,set_open_update}) {
     <tr className={`${bg} hover:opacity-70`}>
         <td align='center' className='p-2 pl-0 pr-0'>{index+1}</td>
         <td>{item?.username}</td>
+        <td>{item?.telephone}</td>
         <td>{item?.email}</td>
         <td>{item?.password}</td>
         <td align='center' width={"10%"}>

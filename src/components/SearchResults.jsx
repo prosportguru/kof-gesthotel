@@ -4,6 +4,8 @@ import ResultItem from './ResultItem'
 import { useNavigate } from 'react-router-dom'
 import { db } from '../firebase_file';
 import ActivityIndicator from './ActivityIndicator';
+import Modal from './Modal';
+import Reserver from './Reserver';
 
 export default function SearchResults({state}) {
     const navigate=useNavigate();
@@ -16,6 +18,9 @@ export default function SearchResults({state}) {
     const [selected_services,set_selected_services]=useState([])
     const [prix,set_prix]=useState(10)
     const [star,set_star]=useState(0)
+    const [open,set_open]=useState(false);
+    const [chambre,set_chambre]=useState(null)
+    const [hotel,set_hotel]=useState(null);
 
 
     const {dst,arrive,depart,voyageur}=state;
@@ -183,6 +188,12 @@ export default function SearchResults({state}) {
         navigate("/details/"+hotel?.key);
     }
 
+    const reserver=async (chambre,hotel)=>{
+        set_hotel(hotel)
+        set_chambre(chambre)
+        set_open(true)
+    }
+
     const add_remove_equipements=(item)=>{
         let nse=selected_equipements?.length==0 ? [] :[...selected_equipements]
         const _in=(nse?.filter((x)=>{
@@ -342,12 +353,23 @@ export default function SearchResults({state}) {
                             return a.key==x.hotel;
                         })[0] ?? null;
                         return(
-                            <ResultItem state={state} notes={notes} item={x} key={index} index={index} go_to_hotel_details={go_to_hotel_details} hotel={hotel}/>
+                            <ResultItem 
+                            reserver={reserver}
+                            state={state} notes={notes} item={x} key={index} index={index} go_to_hotel_details={go_to_hotel_details} hotel={hotel}/>
                         )
                     })}
                 </div>
             </div>
         </div>
+
+        {open==true && <Modal 
+        close={()=>set_open(false)}
+        content={<Reserver 
+        close={()=>set_open(false)}
+        hotel={hotel}
+        chambre={chambre}
+        />}
+        />}
     </div>
   )
 }

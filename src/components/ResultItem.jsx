@@ -5,7 +5,7 @@ import img6 from "../images/img6.png"
 import img7 from "../images/img7.png"
 import Icon from './Icon'
 
-export default function ResultItem({item,index,go_to_hotel_details,hotel,notes,state}) {
+export default function ResultItem({item,index,go_to_hotel_details,hotel,notes,state,reserver}) {
     const [pos,set_pos]=useState(0);
     const {dst,arrive,depart,voyageur}=state;
     let {pays,region,ville,quartier}=dst;
@@ -131,7 +131,9 @@ export default function ResultItem({item,index,go_to_hotel_details,hotel,notes,s
                 <button className='text-[12px] text-blue-500 hover:underline cursor-pointer'
                 onClick={go_to_hotel_details.bind(this,hotel)}
                 >Plus d'offres de cet hôtel</button>
-                <button className='bg-slate-900 p-2 text-white rounded-md border-none text-sm shadow-lg hover:shadow-none'>Réserver</button>
+                <button className='bg-slate-900 p-2 text-white rounded-md border-none text-sm shadow-lg hover:shadow-none'
+                onClick={reserver.bind(this,item,hotel)}
+                >Réserver</button>
             </div>
             
         </div>
