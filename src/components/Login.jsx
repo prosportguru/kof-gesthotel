@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import logo from "../images/logo.png"
 import Icon from './Icon'
 import ActivityIndicator from './ActivityIndicator';
@@ -7,6 +7,10 @@ export default function Login() {
     const [email,set_email]=useState("")
     const [password,set_password]=useState("");
     const [sending,set_sending]=useState(false)
+
+    useEffect(()=>{
+        auth.signOut()
+    },[])
 
     const login=async ()=>{
         if(email==""){
@@ -18,13 +22,35 @@ export default function Login() {
             return;
         }
 
+        
+
         set_sending(true)
+
+
+        let snap=await db.collection("users").where("email","==",email).where("password","==",password).get()
+        if(snap.docs.length==0){
+            alert("Identifiants incorrectes")
+            set_sending(false)
+            return;
+        }
+
         try{
             await auth.signInWithEmailAndPassword(email,password)
         }catch(err){
-            alert(err.message)
-            set_sending(false)
-            return;
+            let code=err.code;
+            if(code=="auth/user-not-found"){
+                try{
+                    await auth.createUserWithEmailAndPassword(email,password)
+                }catch(err2){
+                    alert("Une erreur est survenue:\n"+err2.message)
+                    set_sending(false)  
+                }
+            }else{
+                alert("Une erreur est survenue:\n"+err.message)
+                set_sending(false)
+            }
+           
+            
         }
 
         set_sending(false)

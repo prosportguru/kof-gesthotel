@@ -72,11 +72,17 @@ export default function Admin() {
         set_loading_me(true)
         const snap=await db.collection("users").where("email","==",auth?.currentUser?.email).get();
         if(snap.docs.length==0){
+            set_loading(false)
+            set_connected(false)
             return;
         }
         let doc=snap.docs[0]
         let id=doc.id;
         let dt=doc.data()
+        if(dt.type!=1){
+           // navigate("/login")
+            //return;
+        }
         dt.key=id;
         set_me(dt)
         set_loading_me(false)
