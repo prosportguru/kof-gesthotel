@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { db } from '../firebase_file'
 import { useNavigate } from 'react-router-dom';
+import moment from 'moment';
 
 export default function Footer() {
     const [destinations,set_destinations]=useState(null)
@@ -39,6 +40,11 @@ export default function Footer() {
     const go_to_hotel=(hotel)=>{
         navigate("/details/"+hotel.key)
     }
+
+    const go_to_search=(dst)=>{
+        let date=moment().format("YYYY-MM-DD")
+        navigate("/search",{state:{dst,depart:date,arrive:date,voyageur:{personne:1,chambre:1}}});
+    }
   return (
     <div className='bg-white mt-8'>
         <h1 className='text-blue-500 font-bold m-2 text-xl'>KOF GESTHOTEL</h1>
@@ -58,13 +64,15 @@ export default function Footer() {
                 </ol>
             </div>
             <div className='flex-1'>
-                <h1 className='font-bold text-slate-900'>Pays et régions principaux</h1>
+                <h1 className='font-bold text-slate-900'>Emplacements principaux</h1>
                 <ol className='text-sm flex flex-col gap-3'>
                     {destinations?.map((x,i)=>{
                             return(
                                 <li
+                                onClick={go_to_search.bind(this,x)}
                                 key={i}
-                                className='text-blue-500 hover:underline cursor-pointer hover:opacity-90'><a>{x.pays}, Région {x.region}</a></li>
+                                className='text-blue-500 hover:underline cursor-pointer hover:opacity-90'>
+                                    <a>{x.pays}, Région {x.region}, {x.ville}, {x.quartier}</a></li>
                             )
                         })}
                    

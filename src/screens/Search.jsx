@@ -11,7 +11,7 @@ import { useLocation, useParams } from 'react-router-dom'
 export default function Search() {
   const {state}=useLocation()
   const {dst,arrive,depart,voyageur,connected}=state;
-
+  console.log("the date",arrive,depart)
 
   return (
     <div className='bg-slate-50 min-h-[100vh]'>
